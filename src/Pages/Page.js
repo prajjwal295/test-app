@@ -8,37 +8,31 @@ const Page = ({ accessToken, pageId }) => {
   console.log({ pageId });
 
   const fetchMetrics = async () => {
-    // const since = "2024-01-01"; // Replace with dynamic value if needed
-    // const until = "2024-01-31"; // Replace with dynamic value if needed
-    // const period = "day"; // Adjust period based on your needs
+    // const since = "2024-07-01";
+    // const until = "2024-07-10";
+    const period = "total_over_range";
 
     try {
       // Use the insights endpoint to fetch metrics
       const result = await axios.get(
-        `https://graph.facebook.com/v20.0/${pageId}/insights/`,
+        `https://graph.facebook.com/v20.0/${pageId}/insights?metric=page_post_engagements,page_fans,page_impressions,page_actions_post_reactions_total
+  &access_token=${accessToken}`,
         {
           params: {
-            metric: [
-              "page_fan_adds",
-              "page_engaged_users",
-              "page_impressions",
-              "page_reactions_by_type_total",
-            ],
-
-            access_token: accessToken,
+            // since,
+            // until,
+            period,
           },
         }
       );
 
-      // Parse and set metrics data
-      //   const data = result.data.data.reduce((acc, item) => {
-      //     acc[item.name] = item.values;
-      //     return acc;
-      //   }, {});
+      const data = result.data.data.reduce((acc, item) => {
+        acc[item.name] = item.values;
+        return acc;
+      }, {});
 
-      console.log({ result });
-
-      //   setMetrics(data);
+      setMetrics(data);
+      console.log(metrics)
     } catch (error) {
       console.error("Error fetching page metrics", error);
     }
@@ -56,30 +50,19 @@ const Page = ({ accessToken, pageId }) => {
       {metrics && (
         <div>
           <div>
-            Total Followers:{" "}
-            {metrics["page_fan_adds"]
-              ? metrics["page_fan_adds"].map((val) => val.value).join(", ")
-              : "N/A"}
+            Total Followers: {metrics.page_fans[0].value}
           </div>
           <div>
             Total Engagement:{" "}
-            {metrics["page_engaged_users"]
-              ? metrics["page_engaged_users"].map((val) => val.value).join(", ")
-              : "N/A"}
+            {metrics.page_post_engagements[0].value }
           </div>
           <div>
             Total Impressions:{" "}
-            {metrics["page_impressions"]
-              ? metrics["page_impressions"].map((val) => val.value).join(", ")
-              : "N/A"}
+            {metrics.page_impressions[0].value}
           </div>
           <div>
             Total Reactions:{" "}
-            {metrics["page_reactions_by_type_total"]
-              ? metrics["page_reactions_by_type_total"]
-                  .map((val) => val.value)
-                  .join(", ")
-              : "N/A"}
+            {metrics?.page_actions_post_reactions_total?.length }
           </div>
         </div>
       )}
