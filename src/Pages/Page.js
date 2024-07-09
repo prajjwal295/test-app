@@ -8,8 +8,8 @@ const Page = ({ accessToken, pageId }) => {
   console.log({ pageId });
 
   const fetchMetrics = async () => {
-    // const since = "2024-07-01";
-    // const until = "2024-07-10";
+    const since = "2024-07-01";
+    const until = "2024-07-10";
     const period = "total_over_range";
 
     try {
@@ -19,8 +19,8 @@ const Page = ({ accessToken, pageId }) => {
   &access_token=${accessToken}`,
         {
           params: {
-            // since,
-            // until,
+            since,
+            until,
             period,
           },
         }
@@ -32,7 +32,7 @@ const Page = ({ accessToken, pageId }) => {
       }, {});
 
       setMetrics(data);
-      console.log(metrics)
+      console.log(result);
     } catch (error) {
       console.error("Error fetching page metrics", error);
     }
@@ -46,23 +46,17 @@ const Page = ({ accessToken, pageId }) => {
   }, [pageId]);
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-4 justify-center">
+      <div className="text-xl font-bold">Card Information</div>
+      <p className="font-semibold">(Implementing, "since" and "until" and `period=total_over_range`)</p>
       {metrics && (
-        <div>
-          <div>
-            Total Followers: {metrics.page_fans[0].value}
-          </div>
-          <div>
-            Total Engagement:{" "}
-            {metrics.page_post_engagements[0].value }
-          </div>
-          <div>
-            Total Impressions:{" "}
-            {metrics.page_impressions[0].value}
-          </div>
+        <div className="border-2 border-solid-black p-5">
+          <div>Total Followers: {metrics.page_fans[0].value}</div>
+          <div>Total Engagement: {metrics.page_post_engagements[0].value}</div>
+          <div>Total Impressions: {metrics.page_impressions[0].value}</div>
           <div>
             Total Reactions:{" "}
-            {metrics?.page_actions_post_reactions_total?.length }
+            {metrics?.page_actions_post_reactions_total?.value?.[0]?.value || 0}
           </div>
         </div>
       )}
