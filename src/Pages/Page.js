@@ -3,20 +3,15 @@ import axios from "axios";
 
 const Page = ({ accessToken, pageId }) => {
   const [metrics, setMetrics] = useState({});
-
-  console.log({ accessToken });
-  console.log({ pageId });
+  const [since, setSince] = useState("2024-07-01");
+  const [until, setUntil] = useState("2024-07-10");
 
   const fetchMetrics = async () => {
-    const since = "2024-07-01";
-    const until = "2024-07-10";
     const period = "total_over_range";
 
     try {
-      // Use the insights endpoint to fetch metrics
       const result = await axios.get(
-        `https://graph.facebook.com/v20.0/${pageId}/insights?metric=page_post_engagements,page_fans,page_impressions,page_actions_post_reactions_total
-  &access_token=${accessToken}`,
+        `https://graph.facebook.com/v20.0/${pageId}/insights?metric=page_post_engagements,page_fans,page_impressions,page_actions_post_reactions_total&access_token=${accessToken}`,
         {
           params: {
             since,
@@ -40,23 +35,53 @@ const Page = ({ accessToken, pageId }) => {
 
   useEffect(() => {
     if (pageId) {
-      console.log({ pageId });
       fetchMetrics();
     }
-  }, [pageId]);
+  }, [pageId, since, until]);
 
   return (
-    <div className="flex flex-col items-center gap-4 justify-center">
-      <div className="text-xl font-bold">Card Information</div>
-      <p className="font-semibold">(Implementing, "since" and "until" and `period=total_over_range`)</p>
+    <div className="flex flex-col items-center gap-4 justify-center bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
+      <div className="text-2xl font-bold text-blue-600 mb-4">Page Metrics</div>
+      <div className="flex gap-4 w-full">
+        <div className="flex flex-col">
+          <label htmlFor="since" className="font-bold mb-2 text-gray-700">
+            Since:
+          </label>
+          <input
+            type="date"
+            id="since"
+            value={since}
+            onChange={(e) => setSince(e.target.value)}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="until" className="font-bold mb-2 text-gray-700">
+            Until:
+          </label>
+          <input
+            type="date"
+            id="until"
+            value={until}
+            onChange={(e) => setUntil(e.target.value)}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+      </div>
       {metrics && (
-        <div className="border-2 border-solid-black p-5">
-          <div>Total Followers: {metrics.page_fans[0].value}</div>
-          <div>Total Engagement: {metrics.page_post_engagements[0].value}</div>
-          <div>Total Impressions: {metrics.page_impressions[0].value}</div>
-          <div>
+        <div className="border-2 border-gray-300 p-5 mt-4 rounded-lg bg-white w-full">
+          <div className="text-lg mb-2 text-gray-700">
+            Total Followers: {metrics.page_fans?.[0]?.value || 0}
+          </div>
+          <div className="text-lg mb-2 text-gray-700">
+            Total Engagement: {metrics.page_post_engagements?.[0]?.value || 0}
+          </div>
+          <div className="text-lg mb-2 text-gray-700">
+            Total Impressions: {metrics.page_impressions?.[0]?.value || 0}
+          </div>
+          <div className="text-lg text-gray-700">
             Total Reactions:{" "}
-            {metrics?.page_actions_post_reactions_total?.value?.[0]?.value || 0}
+            {metrics.page_actions_post_reactions_total?.[0]?.value?.like || 0}
           </div>
         </div>
       )}
