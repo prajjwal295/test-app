@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Login = ({ setUser }) => {
   useEffect(() => {
@@ -44,20 +43,28 @@ const Login = ({ setUser }) => {
       });
     }
   };
+
   const handleLogin = () => {
     window.FB.login(checkLoginState, {
       scope:
         "public_profile, pages_show_list, pages_read_engagement, pages_read_user_content",
     });
   };
+
   return (
-    <div className=" w-[50vw] border-solid-black mx-auto mt-20 flex justify-center items-center">
-      <button
-        onClick={handleLogin}
-        className="bg-blue-600 p-5 text-white rounded-md"
-      >
-        Login with Facebook
-      </button>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-full">
+        <h1 className="text-2xl font-bold text-blue-600 mb-4">Welcome</h1>
+        <p className="text-gray-700 mb-6">
+          Log in with your Facebook account to access and manage your pages.
+        </p>
+        <button
+          onClick={handleLogin}
+          className="bg-blue-600 p-3 text-white rounded-md w-full text-lg font-semibold hover:bg-blue-700"
+        >
+          Login with Facebook
+        </button>
+      </div>
     </div>
   );
 };

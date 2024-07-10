@@ -35,19 +35,19 @@ const Home = () => {
   const selectedPage = pages.find((page) => page.id === selectedPageId);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
       {!user ? (
         <Login setUser={setUser} />
       ) : (
-        <div className="mt-20 flex flex-col gap-6 items-center">
-          <div className="w-[10vw] h-auto rounded-full">
+        <div className=" flex flex-col gap-6 items-center bg-white p-8 rounded-lg shadow-md">
+          <div className="w-32 h-32 rounded-full overflow-hidden">
             <img
               src={user.picture}
               alt="Profile"
-              className="w-full h-full rounded-full"
+              className="w-full h-full object-cover"
             />
           </div>
-          <h1 className="text-3xl font-bold">{user.name}</h1>
+          <h1 className="text-3xl font-bold text-blue-600">{user.name}</h1>
           <select
             onChange={handlePageChange}
             value={selectedPageId || ""}
